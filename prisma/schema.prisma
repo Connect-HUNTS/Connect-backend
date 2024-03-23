@@ -1,0 +1,84 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       Int       @id @default(autoincrement())
+  email    String    @unique
+  password String
+  role     String // (INVESTOR, STARTUP, PARTNER)
+  investor Investor?
+  startup  Startup?
+  partner  Partner?
+}
+
+model Investor {
+  id                 Int     @id @default(autoincrement())
+  user               User    @relation(fields: [userId], references: [id])
+  userId             Int     @unique
+  name               String
+  country            String
+  investorType       String
+  website            String?
+  minTicketSize      Float
+  maxTicketSize      Float
+  leadInvestor       Boolean
+  contactInformation String
+  areasForAssistance String?
+  discoverySource    String?
+}
+
+model Startup {
+  id                       Int     @id @default(autoincrement())
+  user                     User    @relation(fields: [userId], references: [id])
+  userId                   Int     @unique
+  name                     String
+  country                  String
+  productType              String
+  description              String
+  mainFeatures             String
+  pitchDeckLink            String?
+  pitchVideoLink           String?
+  whitepaperLink           String?
+  tokenomicsSource         String?
+  raiseType                String
+  fundingRound             String
+  fundraisingGoal          Float
+  raisedToDate             Float
+  previousInvestors        String?
+  notableCustomersPartners String?
+  tractionMetrics          String?
+  teamLinkedInProfiles     String?
+  socialMediaLinks         String?
+  telegram                 String
+  otherServicesNeeded      String?
+  discoverySource          String?
+}
+
+model Partner {
+  id                         Int     @id @default(autoincrement())
+  user                       User    @relation(fields: [userId], references: [id])
+  userId                     Int     @unique
+  name                       String
+  country                    String
+  companyDescription         String
+  websiteOrLinkedIn          String?
+  interestedProjects         String
+  averageBill                Float
+  referralCommission         Float
+  additionalAssistanceNeeded String?
+  communicationEmail         String
+  portfolioExamples          String?
+  discoverySource            String?
+}
