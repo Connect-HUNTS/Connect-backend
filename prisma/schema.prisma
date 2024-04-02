@@ -24,24 +24,27 @@ model User {
 }
 
 model Investor {
-  id                 Int     @id @default(autoincrement())
-  user               User    @relation(fields: [userId], references: [id])
-  userId             Int     @unique
+  id                 Int      @id @default(autoincrement())
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId             Int      @unique
   name               String
+  logo               String?
   country            String
   investorType       String
   website            String?
+  contactInformation String
+  investmentType     String
+  fundingRound       String
+  type               String[]
   minTicketSize      Float
   maxTicketSize      Float
   leadInvestor       Boolean
-  contactInformation String
-  areasForAssistance String?
-  discoverySource    String?
+  description        String?
 }
 
 model Startup {
   id                       Int     @id @default(autoincrement())
-  user                     User    @relation(fields: [userId], references: [id])
+  user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId                   Int     @unique
   name                     String
   country                  String
@@ -67,18 +70,18 @@ model Startup {
 }
 
 model Partner {
-  id                         Int     @id @default(autoincrement())
-  user                       User    @relation(fields: [userId], references: [id])
-  userId                     Int     @unique
-  name                       String
-  country                    String
-  companyDescription         String
-  websiteOrLinkedIn          String?
-  interestedProjects         String
-  averageBill                Float
-  referralCommission         Float
-  additionalAssistanceNeeded String?
-  communicationEmail         String
-  portfolioExamples          String?
-  discoverySource            String?
+  id           Int      @id @default(autoincrement())
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId       Int      @unique
+  name         String
+  logo         String?
+  country      String?
+  description  String?
+  websiteLink  String?
+  links        String[]
+  type         String[]
+  proposals    String[]
+  contactEmail String?
+  keyCases     String?
+  contacts     String[]
 }

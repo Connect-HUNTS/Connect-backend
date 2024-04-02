@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpStatus,
@@ -8,6 +9,7 @@ import {
   ParseIntPipe,
   Post,
   Query,
+  Request,
   UseGuards,
 } from '@nestjs/common';
 import { Investor, Partner, Prisma, Startup, User } from '@prisma/client';
@@ -27,20 +29,50 @@ export class UserController {
 
   @Get('investors')
   @UseGuards(AuthGuard)
-  async getInvestors(@Query('limit') limit: number, @Query('offset') offset: number): Promise<Investor[]> {
-    return this.userService.getInvestors(limit, offset);
+  async getInvestors(
+    @Query('limit', ParseIntPipe) limit: number,
+    @Query('offset', ParseIntPipe) offset: number,
+    @Query('sortBy') sortBy: string,
+    @Query('sortOrder') sortOrder: 'asc' | 'desc',
+    @Query() filters: { [key: string]: string },
+  ): Promise<Investor[]> {
+    return this.userService.getInvestors(limit, offset, sortBy, sortOrder, filters);
   }
 
   @Get('startups')
   @UseGuards(AuthGuard)
-  async getStartups(@Query('limit') limit: number, @Query('offset') offset: number): Promise<Startup[]> {
-    return this.userService.getStartups(limit, offset);
+  async getStartups(
+    @Query('limit', ParseIntPipe) limit: number,
+    @Query('offset', ParseIntPipe) offset: number,
+    @Query('sortBy') sortBy: string,
+    @Query('sortOrder') sortOrder: 'asc' | 'desc',
+    @Query() filters: { [key: string]: string },
+  ): Promise<Startup[]> {
+    return this.userService.getStartups(limit, offset, sortBy, sortOrder, filters);
   }
 
   @Get('partners')
   @UseGuards(AuthGuard)
-  async getPartners(@Query('limit') limit: number, @Query('offset') offset: number): Promise<Partner[]> {
-    return this.userService.getPartners(limit, offset);
+  async getPartners(
+    @Query('limit', ParseIntPipe) limit: number,
+    @Query('offset', ParseIntPipe) offset: number,
+    @Query('sortBy') sortBy: string,
+    @Query('sortOrder') sortOrder: 'asc' | 'desc',
+    @Query() filters: { [key: string]: string },
+  ): Promise<Partner[]> {
+    return this.userService.getPartners(limit, offset, sortBy, sortOrder, filters);
+  }
+
+  @Get('profile')
+  @UseGuards(AuthGuard)
+  async getMyProfile(@Request() req): Promise<User> {
+    return this.userService.findUserById(req.user.id);
+  }
+
+  @Delete('profile')
+  @UseGuards(AuthGuard)
+  async deleteMyProfile(@Request() req): Promise<User> {
+    return this.userService.deleteUserById(req.user.id);
   }
 
   @Get(':id')
