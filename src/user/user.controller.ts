@@ -28,7 +28,7 @@ export class UserController {
   }
 
   @Get('investors')
-  @UseGuards(AuthGuard)
+  // @UseGuards(AuthGuard)
   async getInvestors(
     @Query('limit', ParseIntPipe) limit: number,
     @Query('offset', ParseIntPipe) offset: number,
