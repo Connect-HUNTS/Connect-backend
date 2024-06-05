@@ -14,13 +14,14 @@ datasource db {
 }
 
 model User {
-  id       Int       @id @default(autoincrement())
-  email    String    @unique
-  password String
-  role     String // (INVESTOR, STARTUP, PARTNER)
-  investor Investor?
-  startup  Startup?
-  partner  Partner?
+  id           Int       @id @default(autoincrement())
+  email        String    @unique
+  password     String
+  role         String // (INVESTOR, STARTUP, PARTNER)
+  profileImage String?
+  investor     Investor?
+  startup      Startup?
+  partner      Partner?
 }
 
 model Investor {
@@ -28,7 +29,6 @@ model Investor {
   user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId             Int      @unique
   name               String
-  logo               String?
   country            String
   investorType       String
   website            String?
@@ -74,7 +74,6 @@ model Partner {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId       Int      @unique
   name         String
-  logo         String?
   country      String?
   description  String?
   websiteLink  String?

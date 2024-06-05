@@ -10,21 +10,30 @@ import {
   Post,
   Query,
   Request,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
-import { Investor, Partner, Prisma, Startup, User } from '@prisma/client';
+import { Investor, Partner, Startup, User } from '@prisma/client';
 import { UserService } from './user.service';
 import { AuthGuard } from '../auth/auth.guard';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { multerOptions } from '../config/multer-options';
+import { UserCreateDto } from './dto/user-create.dto';
+import { Express } from 'express';
 
 @Controller('users')
 export class UserController {
-  constructor(private readonly userService: UserService) {
-  }
+  constructor(private readonly userService: UserService) {}
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  async createUser(@Body() userData: Prisma.UserCreateInput): Promise<void> {
-    await this.userService.createUser(userData);
+  @UseInterceptors(FileInterceptor('profileImage', multerOptions))
+  async createUser(
+    @UploadedFile() profileImage: Express.Multer.File,
+    @Body() userData: UserCreateDto,
+  ): Promise<void> {
+    await this.userService.createUser(userData, profileImage);
   }
 
   @Get('investors')
