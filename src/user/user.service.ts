@@ -96,7 +96,7 @@ export class UserService {
     return user;
   }
 
-  async updateUser(userId: number, userInputData: UserUpdateDto, profileImage?: Express.Multer.File): Promise<void> {
+  async updateUser(userId: number, userInputData: UserUpdateDto, profileImage?: Express.Multer.File): Promise<User> {
     const user = await this.prisma.user.findUnique({ where: { id: userId } });
 
     if (!user) {
@@ -133,10 +133,15 @@ export class UserService {
       throw new BadRequestException('Invalid user role');
     }
 
-    await this.prisma.user.update({
+    const updatedUser = await this.prisma.user.update({
       where: { id: userId },
       data: updateData,
+      include: this.dynamicIncludeByRole(user),
     });
+
+    delete updatedUser.password;
+
+    return updatedUser;
   }
 
   async getInvestors(

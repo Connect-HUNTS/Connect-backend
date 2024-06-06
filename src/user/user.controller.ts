@@ -44,8 +44,8 @@ export class UserController {
     @Request() req,
     @UploadedFile() profileImage: Express.Multer.File,
     @Body() userData: UserUpdateDto,
-  ): Promise<void> {
-    await this.userService.updateUser(req.user.id, userData, profileImage);
+  ): Promise<User> {
+    return await this.userService.updateUser(req.user.id, userData, profileImage);
   }
 
   @Get('investors')
