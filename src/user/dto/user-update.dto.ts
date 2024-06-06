@@ -1,8 +1,6 @@
 import { IsOptional, IsString, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
-import { InvestorCreateDto } from './investor-create.dto';
-import { StartupCreateDto } from './startup-create.dto';
-import { PartnerCreateDto } from './partner-create.dto';
+import { InvestorUpdateDto } from './investor-update.dto';
 
 export class UserUpdateDto {
   @IsOptional()
@@ -19,16 +17,16 @@ export class UserUpdateDto {
 
   @IsOptional()
   @ValidateNested()
-  @Type(() => InvestorCreateDto)
-  investor?: InvestorCreateDto;
+  @Type(() => InvestorUpdateDto)
+  investor?: InvestorUpdateDto;
 
   @IsOptional()
   @ValidateNested()
-  @Type(() => StartupCreateDto)
-  startup?: StartupCreateDto;
+  @Type(() => InvestorUpdateDto)
+  startup?: InvestorUpdateDto;
 
   @IsOptional()
   @ValidateNested()
-  @Type(() => PartnerCreateDto)
-  partner?: PartnerCreateDto;
+  @Type(() => InvestorUpdateDto)
+  partner?: InvestorUpdateDto;
 }
