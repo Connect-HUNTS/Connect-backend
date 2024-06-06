@@ -6,7 +6,7 @@ import {
   HttpCode,
   HttpStatus,
   Param,
-  ParseIntPipe,
+  ParseIntPipe, Patch,
   Post,
   Query,
   Request,
@@ -21,6 +21,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { multerOptions } from '../config/multer-options';
 import { UserCreateDto } from './dto/user-create.dto';
 import { Express } from 'express';
+import { UserUpdateDto } from './dto/user-update.dto';
 
 @Controller('users')
 export class UserController {
@@ -36,8 +37,19 @@ export class UserController {
     await this.userService.createUser(userData, profileImage);
   }
 
+  @Patch('profile')
+  @UseGuards(AuthGuard)
+  @UseInterceptors(FileInterceptor('profileImage', multerOptions))
+  async updateUserProfile(
+    @Request() req,
+    @UploadedFile() profileImage: Express.Multer.File,
+    @Body() userData: UserUpdateDto,
+  ): Promise<void> {
+    await this.userService.updateUser(req.user.id, userData, profileImage);
+  }
+
   @Get('investors')
-  // @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard)
   async getInvestors(
     @Query('limit', ParseIntPipe) limit: number,
     @Query('offset', ParseIntPipe) offset: number,

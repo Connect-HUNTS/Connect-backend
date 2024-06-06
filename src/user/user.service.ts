@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../databases/prisma.service';
 import { User } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
@@ -6,6 +6,7 @@ import { UserCreateDto } from './dto/user-create.dto';
 import { InvestorCreateDto } from './dto/investor-create.dto';
 import { StartupCreateDto } from './dto/startup-create.dto';
 import { PartnerCreateDto } from './dto/partner-create.dto';
+import { UserUpdateDto } from './dto/user-update.dto';
 
 @Injectable()
 export class UserService {
@@ -93,6 +94,49 @@ export class UserService {
     });
 
     return user;
+  }
+
+  async updateUser(userId: number, userInputData: UserUpdateDto, profileImage?: Express.Multer.File): Promise<void> {
+    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    if (userInputData.password) {
+      userInputData.password = await bcrypt.hash(userInputData.password, 10);
+    }
+
+    if (profileImage) {
+      userInputData.profileImage = `uploads/profile-images/${profileImage.filename}`;
+    }
+
+    const updateData: any = {
+      email: userInputData.email,
+      password: userInputData.password,
+      profileImage: userInputData.profileImage,
+    };
+
+    if (user.role === 'INVESTOR' && userInputData.investor) {
+      updateData.investor = {
+        update: userInputData.investor,
+      };
+    } else if (user.role === 'STARTUP' && userInputData.startup) {
+      updateData.startup = {
+        update: userInputData.startup,
+      };
+    } else if (user.role === 'PARTNER' && userInputData.partner) {
+      updateData.partner = {
+        update: userInputData.partner,
+      };
+    } else {
+      throw new BadRequestException('Invalid user role');
+    }
+
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: updateData,
+    });
   }
 
   async getInvestors(
