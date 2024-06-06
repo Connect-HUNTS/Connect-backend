@@ -1,8 +1,8 @@
-import { IsArray, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsOptional, IsString } from 'class-validator';
 
 export class PartnerCreateDto {
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   name: string;
 
   @IsOptional()
@@ -18,14 +18,17 @@ export class PartnerCreateDto {
   websiteLink?: string;
 
   @IsArray()
+  @IsOptional()
   @IsString({ each: true })
   links: string[];
 
   @IsArray()
+  @IsOptional()
   @IsString({ each: true })
   type: string[];
 
   @IsArray()
+  @IsOptional()
   @IsString({ each: true })
   proposals: string[];
 
@@ -38,6 +41,7 @@ export class PartnerCreateDto {
   keyCases?: string;
 
   @IsArray()
+  @IsOptional()
   @IsString({ each: true })
   contacts: string[];
 }

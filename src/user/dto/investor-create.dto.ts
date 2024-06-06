@@ -3,15 +3,15 @@ import { IsArray, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-valid
 
 export class InvestorCreateDto {
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   name: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   country: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   investorType: string;
 
   @IsOptional()
@@ -19,30 +19,34 @@ export class InvestorCreateDto {
   website?: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   contactInformation: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   investmentType: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   fundingRound: string;
 
   @IsArray()
+  @IsOptional()
   @IsString({ each: true })
   type: string[];
 
   @IsNumber()
+  @IsOptional()
   @Transform(({ value }) => parseFloat(value))
   minTicketSize: number;
 
   @IsNumber()
+  @IsOptional()
   @Transform(({ value }) => parseFloat(value))
   maxTicketSize: number;
 
   @Type(() => String)
+  @IsOptional()
   @Transform(({ value }) =>  value === 'true')
   leadInvestor: boolean;
 

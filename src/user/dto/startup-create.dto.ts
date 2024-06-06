@@ -3,23 +3,23 @@ import { IsNumber, IsOptional, IsString, IsNotEmpty } from 'class-validator';
 
 export class StartupCreateDto {
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   name: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   country: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   productType: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   description: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   mainFeatures: string;
 
   @IsOptional()
@@ -39,11 +39,11 @@ export class StartupCreateDto {
   tokenomicsSource?: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   raiseType: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   fundingRound: string;
 
   @IsNumber()
@@ -75,7 +75,7 @@ export class StartupCreateDto {
   socialMediaLinks?: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   telegram: string;
 
   @IsOptional()

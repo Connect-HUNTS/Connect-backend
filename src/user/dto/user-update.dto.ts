@@ -1,7 +1,4 @@
 import { IsOptional, IsString, ValidateNested } from 'class-validator';
-import { InvestorUpdateDto } from './investor-update.dto';
-import { StartupUpdateDto } from './startup-update.dto';
-import { PartnerUpdateDto } from './partner-update.dto';
 import { Type } from 'class-transformer';
 import { InvestorCreateDto } from './investor-create.dto';
 import { StartupCreateDto } from './startup-create.dto';
