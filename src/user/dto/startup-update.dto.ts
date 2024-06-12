@@ -1,26 +1,26 @@
+import { IsOptional, IsString } from 'class-validator';
 import { Type } from 'class-transformer';
-import { IsNumber, IsOptional, IsString, IsNotEmpty } from 'class-validator';
 
-export class StartupCreateDto {
-  @IsString()
+export class StartupUpdateDto {
   @IsOptional()
-  name: string;
+  @IsString()
+  name?: string;
 
-  @IsString()
   @IsOptional()
-  country: string;
+  @IsString()
+  country?: string;
 
-  @IsString()
   @IsOptional()
-  productType: string;
+  @IsString()
+  productType?: string;
 
-  @IsString()
   @IsOptional()
-  description: string;
+  @IsString()
+  description?: string;
 
-  @IsString()
   @IsOptional()
-  mainFeatures: string;
+  @IsString()
+  mainFeatures?: string;
 
   @IsOptional()
   @IsString()
@@ -38,21 +38,21 @@ export class StartupCreateDto {
   @IsString()
   tokenomicsSource?: string;
 
-  @IsString()
   @IsOptional()
-  raiseType: string;
-
   @IsString()
+  raiseType?: string;
+
   @IsOptional()
-  fundingRound: string;
+  @IsString()
+  fundingRound?: string;
 
-  @IsNumber()
+  @IsOptional()
   @Type(() => Number)
-  fundraisingGoal: number;
+  fundraisingGoal?: number;
 
-  @IsNumber()
+  @IsOptional()
   @Type(() => Number)
-  raisedToDate: number;
+  raisedToDate?: number;
 
   @IsOptional()
   @IsString()
@@ -74,9 +74,9 @@ export class StartupCreateDto {
   @IsString()
   socialMediaLinks?: string;
 
-  @IsString()
   @IsOptional()
-  telegram: string;
+  @IsString()
+  telegram?: string;
 
   @IsOptional()
   @IsString()
