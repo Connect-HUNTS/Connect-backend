@@ -1,7 +1,7 @@
 import { Transform, Type } from 'class-transformer';
-import { IsArray, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsNumber, IsOptional, IsString } from 'class-validator';
 
-export class InvestorCreateDto {
+export class InvestorDto {
   @IsString()
   @IsOptional()
   name: string;
@@ -10,9 +10,10 @@ export class InvestorCreateDto {
   @IsOptional()
   country: string;
 
-  @IsString()
+  @IsArray()
   @IsOptional()
-  investorType: string;
+  @IsString({ each: true })
+  investorType: string[];
 
   @IsOptional()
   @IsString()
@@ -26,9 +27,10 @@ export class InvestorCreateDto {
   @IsOptional()
   investmentType: string;
 
-  @IsString()
+  @IsArray()
   @IsOptional()
-  fundingRound: string;
+  @IsString({ each: true })
+  fundingRound: string[];
 
   @IsArray()
   @IsOptional()
@@ -47,10 +49,18 @@ export class InvestorCreateDto {
 
   @Type(() => String)
   @IsOptional()
-  @Transform(({ value }) =>  value === 'true')
+  @Transform(({ value }) => value === 'true')
   leadInvestor: boolean;
 
   @IsOptional()
   @IsString()
   description?: string;
+
+  @IsOptional()
+  @IsString()
+  rate?: string;
+
+  @IsOptional()
+  @IsString()
+  telegram?: string;
 }

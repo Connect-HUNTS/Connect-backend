@@ -1,26 +1,31 @@
-import { IsOptional, IsString } from 'class-validator';
 import { Type } from 'class-transformer';
+import { IsNumber, IsOptional, IsString, IsArray } from 'class-validator';
 
-export class StartupUpdateDto {
-  @IsOptional()
+export class StartupDto {
   @IsString()
-  name?: string;
+  @IsOptional()
+  name: string;
 
-  @IsOptional()
   @IsString()
-  country?: string;
+  @IsOptional()
+  country: string;
 
-  @IsOptional()
   @IsString()
-  productType?: string;
+  @IsOptional()
+  website?: string;
 
+  @IsArray()
+  @IsString({ each: true })
   @IsOptional()
-  @IsString()
-  description?: string;
+  type: string[];
 
-  @IsOptional()
   @IsString()
-  mainFeatures?: string;
+  @IsOptional()
+  description: string;
+
+  @IsString()
+  @IsOptional()
+  mainFeatures: string;
 
   @IsOptional()
   @IsString()
@@ -38,21 +43,21 @@ export class StartupUpdateDto {
   @IsString()
   tokenomicsSource?: string;
 
-  @IsOptional()
   @IsString()
-  raiseType?: string;
-
   @IsOptional()
+  raiseType: string;
+
   @IsString()
-  fundingRound?: string;
-
   @IsOptional()
-  @Type(() => Number)
-  fundraisingGoal?: number;
+  fundingRound: string;
 
-  @IsOptional()
+  @IsNumber()
   @Type(() => Number)
-  raisedToDate?: number;
+  fundraisingGoal: number;
+
+  @IsNumber()
+  @Type(() => Number)
+  raisedToDate: number;
 
   @IsOptional()
   @IsString()
@@ -79,10 +84,21 @@ export class StartupUpdateDto {
   telegram?: string;
 
   @IsOptional()
-  @IsString()
-  otherServicesNeeded?: string;
+  @IsArray()
+  @IsString({ each: true })
+  otherServicesNeeded: string[];
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  discoverySource: string[];
+
+  @IsOptional()
+  @IsNumber()
+  @Type(() => Number)
+  minInvestmentSize?: number;
 
   @IsOptional()
   @IsString()
-  discoverySource?: string;
+  tgeDate?: string;
 }
