@@ -1,9 +1,9 @@
 import {
   BadRequestException,
   Body,
-  Controller,
+  Controller, Delete,
   Get,
-  Patch,
+  Patch, Post,
   Query,
   UploadedFile,
   UseGuards,
@@ -24,7 +24,8 @@ export class AdminController {
   constructor(private readonly userService: UserService) {
   }
 
-  @Patch('profile/update')
+  @Patch('users/profile')
+  @Roles(['ADMIN'])
   @UseInterceptors(FileInterceptor('profileImage', multerOptions))
   async updateUser(
     @Query('id') id: number,
@@ -37,6 +38,25 @@ export class AdminController {
     }
 
     return this.userService.updateUserByIdentifier({ id, email }, userData, profileImage);
+  }
+
+  @Post('users/make-admin')
+  @Roles(['ADMIN'])
+  async makeUserAdmin(@Query('id') userId: number): Promise<User> {
+    if (!userId) {
+      throw new BadRequestException('User ID must be provided');
+    }
+
+    return this.userService.makeUserAdmin(userId);
+  }
+
+  @Delete('users')
+  @Roles(['ADMIN'])
+  async deleteUser(@Query('id') userId: number): Promise<User> {
+    if (!userId) {
+      throw new BadRequestException('User ID must be provided');
+    }
+    return this.userService.deleteUserById(userId);
   }
 
   @Get()

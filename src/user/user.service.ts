@@ -7,6 +7,7 @@ import { InvestorDto } from './dto/investor.dto';
 import { StartupDto } from './dto/startup.dto';
 import { PartnerDto } from './dto/partner.dto';
 import { UserUpdateDto } from './dto/user-update.dto';
+import { Roles } from '../auth/roles.decorator';
 
 @Injectable()
 export class UserService {
@@ -251,6 +252,26 @@ export class UserService {
     }));
   }
 
+  async makeUserAdmin(userId: number): Promise<User> {
+    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    if (user.role === 'ADMIN') {
+      throw new BadRequestException('User is already an admin');
+    }
+
+    const updatedUser = await this.prisma.user.update({
+      where: { id: userId },
+      data: { role: 'ADMIN' },
+    });
+
+    delete updatedUser.password;
+    return updatedUser;
+  }
+
 
   buildPrismaQueryParameters(
     limit: number,
@@ -360,7 +381,10 @@ export class UserService {
       where: { id },
     });
 
-    if (!userExist) return null;
+    if (!userExist) {
+      throw new NotFoundException('User not found');
+    }
+
     const deletedUser = await this.prisma.user.delete({
       where: { id },
     });
