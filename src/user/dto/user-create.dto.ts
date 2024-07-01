@@ -6,12 +6,13 @@ import {
   IsString,
   ValidateNested,
 } from 'class-validator';
-import { InvestorCreateDto } from './investor-create.dto';
-import { StartupCreateDto } from './startup-create.dto';
-import { PartnerCreateDto } from './partner-create.dto';
+import { InvestorDto } from './investor.dto';
+import { StartupDto } from './startup.dto';
+import { PartnerDto } from './partner.dto';
 
 export class UserCreateDto {
   @IsEmail()
+  @IsNotEmpty()
   email: string;
 
   @IsString()
@@ -28,16 +29,16 @@ export class UserCreateDto {
 
   @IsOptional()
   @ValidateNested()
-  @Type(() => InvestorCreateDto)
-  investor?: InvestorCreateDto;
+  @Type(() => InvestorDto)
+  investor?: InvestorDto;
 
   @IsOptional()
   @ValidateNested()
-  @Type(() => StartupCreateDto)
-  startup?: StartupCreateDto;
+  @Type(() => StartupDto)
+  startup?: StartupDto;
 
   @IsOptional()
   @ValidateNested()
-  @Type(() => PartnerCreateDto)
-  partner?: PartnerCreateDto;
+  @Type(() => PartnerDto)
+  partner?: PartnerDto;
 }

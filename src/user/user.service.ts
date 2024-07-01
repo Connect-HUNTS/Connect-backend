@@ -3,10 +3,11 @@ import { PrismaService } from '../databases/prisma.service';
 import { User } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { UserCreateDto } from './dto/user-create.dto';
-import { InvestorCreateDto } from './dto/investor-create.dto';
-import { StartupCreateDto } from './dto/startup-create.dto';
-import { PartnerCreateDto } from './dto/partner-create.dto';
+import { InvestorDto } from './dto/investor.dto';
+import { StartupDto } from './dto/startup.dto';
+import { PartnerDto } from './dto/partner.dto';
 import { UserUpdateDto } from './dto/user-update.dto';
+import { Roles } from '../auth/roles.decorator';
 
 @Injectable()
 export class UserService {
@@ -27,7 +28,6 @@ export class UserService {
     if (profileImage) {
       userInputData.profileImage = `uploads/profile-images/${profileImage.filename}`;
     }
-    console.log(userInputData.profileImage);
 
     const { role } = userInputData;
 
@@ -43,7 +43,7 @@ export class UserService {
   }
 
   private async createInvestor(userData: UserCreateDto): Promise<User> {
-    const investorData = userData.investor as InvestorCreateDto;
+    const investorData = userData.investor as InvestorDto;
 
     const user = await this.prisma.user.create({
       data: {
@@ -61,7 +61,7 @@ export class UserService {
   }
 
   private async createStartup(userData: UserCreateDto): Promise<User> {
-    const startupData = userData.startup as StartupCreateDto;
+    const startupData = userData.startup as StartupDto;
 
     const user = await this.prisma.user.create({
       data: {
@@ -79,7 +79,7 @@ export class UserService {
   }
 
   private async createPartner(userData: UserCreateDto): Promise<User> {
-    const partnerData = userData.partner as PartnerCreateDto;
+    const partnerData = userData.partner as PartnerDto;
 
     const user = await this.prisma.user.create({
       data: {
@@ -129,8 +129,6 @@ export class UserService {
       updateData.partner = {
         update: userInputData.partner,
       };
-    } else {
-      throw new BadRequestException('Invalid user role');
     }
 
     const updatedUser = await this.prisma.user.update({
@@ -142,6 +140,27 @@ export class UserService {
     delete updatedUser.password;
 
     return updatedUser;
+  }
+
+  async updateUserByIdentifier(identifier: {
+    id?: number,
+    email?: string
+  }, userInputData: UserUpdateDto, profileImage?: Express.Multer.File): Promise<User> {
+    let user: User;
+
+    if (identifier.id) {
+      user = await this.prisma.user.findUnique({ where: { id: identifier.id } });
+    } else if (identifier.email) {
+      user = await this.prisma.user.findUnique({ where: { email: identifier.email } });
+    } else {
+      throw new BadRequestException('Either id or email must be provided');
+    }
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    return this.updateUser(user.id, userInputData, profileImage);
   }
 
   async getInvestors(
@@ -231,6 +250,26 @@ export class UserService {
       profileImage: partner.user.profileImage,
       user: undefined, // Remove user object from the response
     }));
+  }
+
+  async makeUserAdmin(userId: number): Promise<User> {
+    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    if (user.role === 'ADMIN') {
+      throw new BadRequestException('User is already an admin');
+    }
+
+    const updatedUser = await this.prisma.user.update({
+      where: { id: userId },
+      data: { role: 'ADMIN' },
+    });
+
+    delete updatedUser.password;
+    return updatedUser;
   }
 
 
@@ -342,7 +381,10 @@ export class UserService {
       where: { id },
     });
 
-    if (!userExist) return null;
+    if (!userExist) {
+      throw new NotFoundException('User not found');
+    }
+
     const deletedUser = await this.prisma.user.delete({
       where: { id },
     });

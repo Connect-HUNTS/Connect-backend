@@ -1,9 +1,9 @@
-import { IsOptional, IsString, IsArray } from 'class-validator';
+import { IsArray, IsOptional, IsString } from 'class-validator';
 
-export class PartnerUpdateDto {
-  @IsOptional()
+export class PartnerDto {
   @IsString()
-  name?: string;
+  @IsOptional()
+  name: string;
 
   @IsOptional()
   @IsString()
@@ -18,19 +18,18 @@ export class PartnerUpdateDto {
   websiteLink?: string;
 
   @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
-  links?: string[];
+  @IsString()
+  telegram?: string;
 
-  @IsOptional()
   @IsArray()
+  @IsOptional()
   @IsString({ each: true })
-  type?: string[];
+  type: string[];
 
-  @IsOptional()
   @IsArray()
+  @IsOptional()
   @IsString({ each: true })
-  proposals?: string[];
+  proposals: string[];
 
   @IsOptional()
   @IsString()
@@ -41,7 +40,14 @@ export class PartnerUpdateDto {
   keyCases?: string;
 
   @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
-  contacts?: string[];
+  @IsString()
+  contact?: string;
+
+  @IsOptional()
+  @IsString()
+  averageBill?: number;
+
+  @IsOptional()
+  @IsString()
+  referralFee?: string;
 }

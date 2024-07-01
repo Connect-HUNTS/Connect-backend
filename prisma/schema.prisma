@@ -17,7 +17,7 @@ model User {
   id           Int       @id @default(autoincrement())
   email        String    @unique
   password     String
-  role         String // (INVESTOR, STARTUP, PARTNER)
+  role         String // (INVESTOR, STARTUP, PARTNER, ADMIN)
   profileImage String?
   investor     Investor?
   startup      Startup?
@@ -29,26 +29,30 @@ model Investor {
   user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId             Int      @unique
   name               String
-  country            String
-  investorType       String
+  country            String?
+  investorType       String[]
   website            String?
-  contactInformation String
-  investmentType     String
-  fundingRound       String
+  contactInformation String?
+  investmentType     String?
+  fundingRound       String[]
   type               String[]
-  minTicketSize      Float
-  maxTicketSize      Float
-  leadInvestor       Boolean
+  minTicketSize      Float?
+  maxTicketSize      Float?
+  leadInvestor       Boolean?
   description        String?
+  telegram           String?
+  linkedin           String?
+  rate               String?
 }
 
 model Startup {
-  id                       Int     @id @default(autoincrement())
-  user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId                   Int     @unique
+  id                       Int      @id @default(autoincrement())
+  user                     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                   Int      @unique
   name                     String
   country                  String
-  productType              String
+  website                  String?
+  type                     String[]
   description              String
   mainFeatures             String
   pitchDeckLink            String?
@@ -56,7 +60,7 @@ model Startup {
   whitepaperLink           String?
   tokenomicsSource         String?
   raiseType                String
-  fundingRound             String
+  fundingRound             String?
   fundraisingGoal          Float
   raisedToDate             Float
   previousInvestors        String?
@@ -64,9 +68,12 @@ model Startup {
   tractionMetrics          String?
   teamLinkedInProfiles     String?
   socialMediaLinks         String?
-  telegram                 String
-  otherServicesNeeded      String?
-  discoverySource          String?
+  telegram                 String?
+  linkedin                 String?
+  otherServicesNeeded      String[]
+  discoverySource          String[]
+  minInvestmentSize        Float?
+  tgeDate                  String?
 }
 
 model Partner {
@@ -77,10 +84,13 @@ model Partner {
   country      String?
   description  String?
   websiteLink  String?
-  links        String[]
+  telegram     String?
+  linkedin     String?
   type         String[]
   proposals    String[]
   contactEmail String?
   keyCases     String?
-  contacts     String[]
+  contact      String?
+  averageBill  Float?
+  referralFee  String?
 }

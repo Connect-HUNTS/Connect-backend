@@ -5,6 +5,7 @@ import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { AdminModule } from './admin/admin.module';
 
 @Module({
   imports: [
@@ -12,7 +13,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
       rootPath: join(__dirname, '..', 'uploads'),
       serveRoot: '/uploads',
     }),
-    UserModule, AuthModule,
+    UserModule, AuthModule, AdminModule,
   ],
   controllers: [AppController],
   providers: [AppService],
